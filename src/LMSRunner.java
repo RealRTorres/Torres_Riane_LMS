@@ -4,31 +4,56 @@
 * 9/7/23
 * CEN 3024C
 *  */
+/*Brief Function of LMSRunner class
+Provides user functions: show and choose options
+*/
+
+import java.awt.*;
+import java.util.Collections;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.io.*;
+
 public class LMSRunner {
     public static void main(String[] args) {
-        LMS artOfComputerProgramming = new LMS(1000);
-        LMS effectiveJava = new LMS(1000);
-        LMS clearCode = new LMS(1000);
+        Scanner input = new Scanner(System.in);
 
-        artOfComputerProgramming.read();
-        effectiveJava.read();
-        clearCode.read();
+        ArrayList<LMS> books = new ArrayList<LMS>();
 
-        artOfComputerProgramming.setCopies(4);
-        effectiveJava.setCopies(6);
-        clearCode.setCopies(10);
+        System.out.println("Available Options:");
+        System.out.println("1 - Add/Check-in Book");
+        System.out.println("2 - Remove/Check-out Book");
+        System.out.println("3 - Check Booklist");
+        System.out.println("/n Please choose an option: ");
+        int optionChoice = input.nextInt();
 
-        artOfComputerProgramming.checkedIn(5);
-        effectiveJava.checkedIn(7);
-        clearCode.checkedIn(10);
+        //let user choose option from menu
+        switch (optionChoice) {
+            case 1:
+                System.out.println("Adding/Checking-in Book");
+                System.out.println("/nAdd ID No.: ");
+                String addBookId = input.nextLine();
+                System.out.println("Add Title: ");
+                String addBookTitle = input.nextLine();
+                System.out.println("Add author: ");
+                String addBookAuthor = input.nextLine();
 
-        artOfComputerProgramming.checkedOut(6);
-        effectiveJava.checkedOut(10);
-        clearCode.checkedOut(20);
-
-        System.out.println(artOfComputerProgramming.getCopies());
-        System.out.println(effectiveJava.getCopies());
-        System.out.println(clearCode.getCopies());
+                System.out.println("Adding/Checking-in: Successful");
+                break;
+            case 2:
+                System.out.println("Removing/Checking-out Book");
+                System.out.println("/nEnter ID No.: ");
+                String removeBook = input.next();
+                //Add in id object thingy here
+                System.out.println("Removing/Checking out: Successful");
+                break;
+            case 3:
+                System.out.println("Checking current booklist");
+                System.out.println(books.toString());
+                //Just going to make case 3 automatically check the list
+                break;
+            default:
+                System.out.println("Error: Not an option. Please choose an option on the menu.");
+        }
     }
-
 }

@@ -8,50 +8,62 @@
 Provides user functions: show and choose options
 */
 
-import java.awt.*;
-import java.util.Collections;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class LMSRunner {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner input = new Scanner(System.in);
-
-        ArrayList<LMS> books = new ArrayList<LMS>();
+        PrintWriter pw = new PrintWriter(new FileWriter("bookfile.txt", true));
 
         System.out.println("Available Options:");
         System.out.println("1 - Add/Check-in Book");
         System.out.println("2 - Remove/Check-out Book");
         System.out.println("3 - Check Booklist");
-        System.out.println("/n Please choose an option: ");
+        System.out.println("4 - Exit anytime");
+        System.out.println("\n Please choose an option: ");
         int optionChoice = input.nextInt();
 
         //let user choose option from menu
         switch (optionChoice) {
             case 1:
                 System.out.println("Adding/Checking-in Book");
-                System.out.println("/nAdd ID No.: ");
-                String addBookId = input.nextLine();
-                System.out.println("Add Title: ");
-                String addBookTitle = input.nextLine();
-                System.out.println("Add author: ");
-                String addBookAuthor = input.nextLine();
+                System.out.println("Add ID No.");
+                int bookID = input.nextInt();
+                pw.println(bookID +", ");
+                input.nextLine();
+                System.out.println("Add Title");
+                String bookTitle = input.nextLine();
+                pw.println(bookTitle + ", ");
+                System.out.println("Add author");
+                String bookAuthor = input.nextLine();
+                pw.println(bookAuthor);
+                pw.close();
 
+                LMS bookUI = new LMS(bookID, bookTitle, bookAuthor);
+                bookUI.addBookInfo();
                 System.out.println("Adding/Checking-in: Successful");
                 break;
             case 2:
                 System.out.println("Removing/Checking-out Book");
-                System.out.println("/nEnter ID No.: ");
-                String removeBook = input.next();
-                //Add in id object thingy here
+                System.out.println("Enter ID No.: ");
+                bookID = input.nextInt();
+
+                //LMS obj = new LMS();
+                //LMS.removeBook("bookfile.txt", bookID);
+                //LMS.removeBookInfo();
                 System.out.println("Removing/Checking out: Successful");
                 break;
             case 3:
                 System.out.println("Checking current booklist");
-                System.out.println(books.toString());
+                String data = LMS.checkBooklist("bookfile.txt");
+                System.out.println(data);
                 //Just going to make case 3 automatically check the list
                 break;
+            case 4:
+                return;
             default:
                 System.out.println("Error: Not an option. Please choose an option on the menu.");
         }

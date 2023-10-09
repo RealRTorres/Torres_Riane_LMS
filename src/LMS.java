@@ -5,144 +5,249 @@
  * CEN 3024C
  *  */
 /* Brief Function of LMS class
-* This is where the getters and setters for the objects and methods will go
-* Private the variables in the parameters so no one changes it
-* Public the objects*/
+ * This is where the getters and setters for the objects and methods will go
+ * Private the variables in the parameters so no one changes it
+ * Public the objects
+ * This is where the methods for the menu options are
+ *
+ * Something in this class is causing the status to be null and due date as today's current date when adding a book
+ * It's fixed once you check in a book, but it's still a nuisance to check in as you add a book
+ *
+ * Probably best to rearrange the methods, if it doesn't mess up the program, again
+ * */
 
-import java.util.*;
 import java.io.*;
-import java.io.IOException;
-import java.util.List;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.StringTokenizer;
 
 public class LMS {
-    private int bookID = 0;
-    private String bookTitle = "";
-    private String bookAuthor = "";
-    List<String> list = new ArrayList<String>();
-    List<Integer> idList = new ArrayList<Integer>();
+    private ArrayList<Book> books = new ArrayList<>();
+    final static String FILENAME = "bookfile.txt";
+    final static String CHECKED_IN = "Checked-in";
+    final static String CHECKED_OUT = "Checked-out";
 
-    //constructor for the books
-    public LMS(int id, String title, String author) {
-        this.bookID = id;
-        this.bookTitle = title;
-        this.bookAuthor = author;
+    //constructor for the readFromFile() method
+    public LMS() throws IOException {
+        // Retrieve any existing book list from the file
+        this.readFromFile(FILENAME);
     }
 
-    public void setBookID (int id) {
-        bookID = id;
-    }
-
-    public int getBookID () {
-        return bookID;
-    }
-
-    public void setBookTitle (String title) {
-        bookTitle = title;
-    }
-
-    public String getBookTitle () {
-        return bookTitle;
-    }
-
-    public void setBookAuthor (String author) {
-        bookAuthor = author;
-    }
-    public String getBookAuthor () {
-        return bookAuthor;
-    }
-
-    public List<String> getList() {
-        return list;
-    }
-
-    public List<Integer> getIdList() {
-        return idList;
-    }
-
-    //format the output
-    public String toString(){
-        return bookID + ", " + bookTitle + ", " + bookAuthor;
-    }
-
-    //addBookInfo method
-    //adds the id no., title, and author into the idList and list array
-    //arguments: bookID, bookTitle, bookAuthor
-    //returns adding the user input into the arrays
-    public void addBookInfo(){
-        idList.add(bookID);
-        list.add(bookTitle);
-        list.add(bookAuthor);
-
-    }
-
-    //removeBookInfo method
-    //removes the id, title, and author from the arrays
-    //arguments: bookID, bookTitle, bookAuthor
-    //returns removing the user input from the arrays
-    public void removeBookInfo(){
-        //idList.removeIf(p -> p.bookID.equals(bookID));
-        idList.remove(bookID);
-        list.remove(bookTitle);
-        list.remove(bookAuthor);
-
-    }
-
-    //removeBook method
-    //removes the text from the textfile
-    //arguments: filepath, deleteLine
-    //supposed to return a newly overwritten file with one the texts gone
-    public static void removeBook(String filepath, int deleteLine) throws IOException {
-        String tempFile = "temp.txt";
-        File oldFile = new File(filepath);
-        File newFile = new File(tempFile);
-
-        int line = 0;
-        String currentLine;
-
+     /**
+     * readFromFile method
+     * purpose is to read every line of text that is in bookfile.txt every time LMS program is used
+     * Uses a stringtokenizer to pass the integer and strings
+     * Uses a try and catch for the IOException and e
+     * @param filepath
+     * arguments: stringDate, book
+     * Returns either an error message if the file can't be read or create book objects
+     */
+    public void readFromFile(String filepath)  {
+       String currentLine = null;
         try {
-            FileWriter fw = new FileWriter(tempFile, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter pw = new PrintWriter(bw);
+            BufferedReader reader = new BufferedReader(new FileReader(filepath));
+            currentLine = reader.readLine();
 
-            FileReader fr = new FileReader(filepath);
-            BufferedReader br = new BufferedReader(fr);
+            while (currentLine != null) {
+                StringTokenizer st = new StringTokenizer(currentLine, ",");
+                String barcode = st.nextToken();
+                String bookTitle = st.nextToken();
+                String bookAuthor = st.nextToken();
+                String bookGenre = st.nextToken();
 
-            while((currentLine = br.readLine()) != null) {
-                line++;
+                String bookCheckedOutStatus = st.nextToken();
 
-                if(deleteLine != line) {
-                    pw.println(currentLine);
+                //converts the string value "2023-11-05" from the file to Date object
+                Date bookDueDate = null;
+                String strDate = st.nextToken();
+                if (strDate != null || strDate.trim().length() > 0) {
+                    strDate = strDate.trim();
+                    if (!strDate.equalsIgnoreCase("null")) {
+                        LocalDate initialDate = LocalDate.parse(strDate);
+                        bookDueDate = java.util.Date.from(initialDate.atStartOfDay()
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant());
+                    }
                 }
+                Book book = new Book(barcode, bookTitle, bookAuthor, bookGenre, bookCheckedOutStatus, bookDueDate);
+                // initializes the book list with values read from the file
+                this.books.add(book);
+                currentLine = reader.readLine();
             }
-            pw.flush();
-            pw.close();
-            fr.close();
-            br.close();
-            bw.close();
-            fw.close();
 
-            oldFile.delete();
-            File dump = new File(filepath);
-            newFile.renameTo(dump);
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch(IOException e){
+            System.err.println("Error encounter,msg: " + e.getMessage());
         }
     }
 
-    /* checkBooklist method
-    * Prints out current booklist in the arraylist in the text file
-    * arguments: filepath, content
-    * returns content and e */
-    public static String checkBooklist(String filepath) {
-        String content;
+    /**
+     * addBookInfo method
+     * adds user's input of ID no./now barcode, title, author, and genre into the idList and arraylist
+     * calls the toCSV in the Book class to print out the user's input
+     * also invokes the saveBookToFile method to write the text into bookfile.txt
+     * Arguments: newBook
+     * @param newBook
+     * returns whatever the user inputted by adding it in the arraylist
+     */
+    public void addBook(Book newBook) {
+        this.books.add(newBook);
+        System.out.println("Added: " + newBook.toCSV());
+        System.out.println("Adding...Successful\n");
+        this.saveBookToFile(newBook);
+    }
 
+    /**
+     * saveBooktoFile method
+     * Saves the book to the file and append to the last line
+     * @param book
+     * Arguments: n/a
+     * Returns user's input text into the file
+     */
+    private void saveBookToFile(Book book)  {
         try {
-            content = new String(Files.readAllBytes(Paths.get((filepath))));
+            PrintWriter pWriter = new PrintWriter(new FileWriter(FILENAME, true));
+            pWriter.println(book.toCSV());
+            pWriter.close();
         } catch (IOException e) {
-            return e.toString();
+            System.err.println(e.getMessage());
         }
-        return content;
+    }
+
+      /**
+     * saveToFile method
+     * overwrites the bookfile.txt whenever adding/removing a book
+     * It saves the book list as comma seperated values
+     * uses the getters to get the book details
+     * Arguments: n/a
+     * @param append
+     * Returns the overwritten text file
+     */
+    public void saveBookListToFile(boolean append)  {
+        PrintWriter pWriter = null;
+        try {
+            pWriter = new PrintWriter(new FileWriter(FILENAME, append));
+            for(Book book : this.books) {
+                pWriter.println(book.toCSV());
+            }
+            pWriter.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    /**
+     * checkInBookStatus method
+     * Checks in a book from the user via book title
+     * Arguments:CHECKED_IN
+     * @param titleOrBarcode
+     * Returns bookCheckedOutStatus as "checked-out",
+     *  save and overwrites the file to update the status,
+     *  print out confirmation and current booklist
+     */
+
+    public void checkInBookStatus(String titleOrBarcode) {
+        titleOrBarcode = titleOrBarcode.trim();
+        for(Book book : this.books) {
+            if (book.getBarcode().equalsIgnoreCase(titleOrBarcode) ||
+                    book.getTitle().equalsIgnoreCase(titleOrBarcode))
+            {
+                book.setCheckedOutStatus(CHECKED_IN);
+                book.setDueDate(null);
+                saveBookListToFile(false);
+                System.out.println("Checking In " + book.toCSV());
+                break;
+            }
+        }
+        printBookList();
+
+    }
+
+    /**
+     * checkOutBook method
+     * Changes book status to check out via user's input title or barcode
+     * Also calculates the due date
+     * Arguments: titleOrBarcode, CHECKED_OUT, Calendar.DATE, 28
+     * @param titleOrBarcode
+     * returns the claculated due date and updated status
+     */
+    public void checkOutBook(String titleOrBarcode){
+        titleOrBarcode = titleOrBarcode.trim();
+        for(Book book : this.books) {
+            if (book.getBarcode().equalsIgnoreCase(titleOrBarcode) ||
+                    book.getTitle().equalsIgnoreCase(titleOrBarcode))
+            {
+                if (book.getCheckedOutStatus().equalsIgnoreCase(CHECKED_OUT)) {
+                    System.out.println(book.getTitle() + " is not available.\n");
+                }
+                else {
+                    book.setCheckedOutStatus(CHECKED_OUT);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new Date());
+                    calendar.add(Calendar.DATE, 28);
+                    Date dueDate = calendar.getTime();
+                    book.setDueDate(dueDate);
+                    saveBookListToFile(false);
+                    System.out.println("Checking out " + book.toCSV());
+                    printBookList();
+                }
+                break;
+            }
+        }
+    }
+
+    /**
+     * removeBookInfo method
+     * Removes barcode, title, author, genre from the arraylist
+     * Arguments: titleOrBarcode
+     * @param titleOrBarcode
+     * @return
+     * Returns by deleting the user's input from the arrays
+     * @throws IOException
+     */
+    public void removeBook(String titleOrBarcode) throws IOException {
+        for(Book book : this.books) {
+            if (book.getBarcode().equalsIgnoreCase(titleOrBarcode) ||
+                    book.getTitle().equalsIgnoreCase(titleOrBarcode))
+            {
+                this.books.remove(book);
+                System.out.println("Removed: " +  book.toCSV());
+                System.out.println("Removing: Successful\n");
+                break;
+            }
+        }
+        printBookList();
+    }
+
+    /**
+     * printBookList method
+     * Print the current values of the booklist (barcode, title, author, genre, status, and due date)
+        * that's currently in the memory
+     * Arguments: n/a
+     * Returns the values printed out via CSV format
+     */
+    public void printBookList() {
+        for(Book book : this.books) {
+            System.out.println(book.toCSV());
+        }
+    }
+
+    /**
+     * viewBooklistFromFile method
+     * Prints out current booklist in the text written in bookfile.txt
+     * arguments: filepath
+     * @param filepath
+     * returns the values/book details via CSV format
+     */
+    public void viewBooklistFromFile(String filepath) {
+        System.out.println("Printing..." );
+        this.books = new ArrayList<>();
+        this.readFromFile(filepath);
+        for(Book book : this.books) {
+            System.out.println(book.toCSV());
+        }
+        System.out.println("\n");
     }
 }

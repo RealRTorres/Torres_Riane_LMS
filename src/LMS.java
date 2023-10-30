@@ -1,7 +1,7 @@
 /*
  * Riane Torres
  * Co. No. 14835
- * 9/7/23
+ * 10/14/23
  * CEN 3024C
  *  */
 /* Brief Function of LMS class
@@ -10,12 +10,10 @@
  * Public the objects
  * This is where the methods for the menu options are
  *
- * Something in this class is causing the status to be null and due date as today's current date when adding a book
- * It's fixed once you check in a book, but it's still a nuisance to check in as you add a book
- *
  * Probably best to rearrange the methods, if it doesn't mess up the program, again
  * */
 
+import javax.swing.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -25,13 +23,15 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 public class LMS {
+
     private ArrayList<Book> books = new ArrayList<>();
     final static String FILENAME = "bookfile.txt";
     final static String CHECKED_IN = "Checked-in";
     final static String CHECKED_OUT = "Checked-out";
 
     //constructor for the readFromFile() method
-    public LMS() throws IOException {
+    public LMS()
+    {
         // Retrieve any existing book list from the file
         this.readFromFile(FILENAME);
     }
@@ -89,14 +89,16 @@ public class LMS {
      * calls the toCSV in the Book class to print out the user's input
      * also invokes the saveBookToFile method to write the text into bookfile.txt
      * Arguments: newBook
-     * @param newBook
-     * returns whatever the user inputted by adding it in the arraylist
+     *
+     * @param newBook returns whatever the user inputted by adding it in the arraylist
+     * @return
      */
-    public void addBook(Book newBook) {
+    public Object addBook(Book newBook) {
         this.books.add(newBook);
         System.out.println("Added: " + newBook.toCSV());
         System.out.println("Adding...Successful\n");
         this.saveBookToFile(newBook);
+        return newBook;
     }
 
     /**
@@ -148,7 +150,8 @@ public class LMS {
      *  print out confirmation and current booklist
      */
 
-    public void checkInBookStatus(String titleOrBarcode) {
+    public Book checkInBookStatus(String titleOrBarcode) {
+        Book result = null;
         titleOrBarcode = titleOrBarcode.trim();
         for(Book book : this.books) {
             if (book.getBarcode().equalsIgnoreCase(titleOrBarcode) ||
@@ -156,13 +159,15 @@ public class LMS {
             {
                 book.setCheckedOutStatus(CHECKED_IN);
                 book.setDueDate(null);
+                result = book;
                 saveBookListToFile(false);
+
                 System.out.println("Checking In " + book.toCSV());
                 break;
             }
         }
         printBookList();
-
+        return result;
     }
 
     /**
@@ -173,7 +178,8 @@ public class LMS {
      * @param titleOrBarcode
      * returns the claculated due date and updated status
      */
-    public void checkOutBook(String titleOrBarcode){
+    public Book checkOutBook(String titleOrBarcode){
+        Book result = null;
         titleOrBarcode = titleOrBarcode.trim();
         for(Book book : this.books) {
             if (book.getBarcode().equalsIgnoreCase(titleOrBarcode) ||
@@ -189,6 +195,7 @@ public class LMS {
                     calendar.add(Calendar.DATE, 28);
                     Date dueDate = calendar.getTime();
                     book.setDueDate(dueDate);
+                    result = book;
                     saveBookListToFile(false);
                     System.out.println("Checking out " + book.toCSV());
                     printBookList();
@@ -196,29 +203,33 @@ public class LMS {
                 break;
             }
         }
+        return result;
     }
 
     /**
      * removeBookInfo method
      * Removes barcode, title, author, genre from the arraylist
      * Arguments: titleOrBarcode
+     *
      * @param titleOrBarcode
-     * @return
-     * Returns by deleting the user's input from the arrays
+     * @return Returns by deleting the user's input from the arrays
      * @throws IOException
      */
-    public void removeBook(String titleOrBarcode) throws IOException {
+    public Book removeBook(String titleOrBarcode) throws IOException {
+        Book result = null;
         for(Book book : this.books) {
             if (book.getBarcode().equalsIgnoreCase(titleOrBarcode) ||
                     book.getTitle().equalsIgnoreCase(titleOrBarcode))
             {
                 this.books.remove(book);
+                result = book;
                 System.out.println("Removed: " +  book.toCSV());
                 System.out.println("Removing: Successful\n");
                 break;
             }
         }
         printBookList();
+        return result;
     }
 
     /**
@@ -238,16 +249,27 @@ public class LMS {
      * viewBooklistFromFile method
      * Prints out current booklist in the text written in bookfile.txt
      * arguments: filepath
-     * @param filepath
-     * returns the values/book details via CSV format
+     *
+     * @param filepath returns the values/book details via CSV format
+     * @return
      */
-    public void viewBooklistFromFile(String filepath) {
+    public String viewBooklistFromFile(String filepath) {
         System.out.println("Printing..." );
         this.books = new ArrayList<>();
         this.readFromFile(filepath);
         for(Book book : this.books) {
+            //Using JOptionPane results in a new pane for every single book, not what we want
+            //JOptionPane.showMessageDialog(null, book.toCSV());
+
             System.out.println(book.toCSV());
         }
         System.out.println("\n");
+        return books.toString();
     }
+
+    //Just LMSTest cases
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
+
 }

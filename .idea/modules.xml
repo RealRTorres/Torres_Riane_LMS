@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LMSAssign.iml" filepath="$PROJECT_DIR$/LMSAssign.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MainFrameTesting/MainFrameTesting.iml" filepath="$PROJECT_DIR$/MainFrameTesting/MainFrameTesting.iml" />
     </modules>
   </component>
 </project>

@@ -5,7 +5,7 @@ import java.util.*;
 /*
  * Riane Torres
  * Co. No. 14835
- * 9/27/23
+ * 10/14/23
  * CEN 3024C
  *  */
 /* Brief Function of Book class
@@ -17,8 +17,8 @@ public class Book {
     private String title;
     private String author;
     private String genre;
-    private String checkedOutStatus;
-    private Date dueDate = new Date();
+    private String checkedOutStatus ="Checked-in";
+    private Date dueDate; // = new Date();
 
 
     public Book() {
@@ -86,14 +86,16 @@ public class Book {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Book{");
-        sb.append("barcode='").append(barcode).append('\'');
-        sb.append(", title='").append(title).append('\'');
-        sb.append(", author='").append(author).append('\'');
-        sb.append(", genre='").append(genre).append('\'');
-        sb.append(", checkedOutStatus=").append(checkedOutStatus);
-        sb.append(", dueDate=").append(dueDate);
-        sb.append('}');
+        final StringBuilder sb = new StringBuilder("");
+        sb.append("\n");
+        sb.append(",").append(barcode);
+        sb.append(",").append(title);
+        sb.append(",").append(author);
+        sb.append(",").append(genre);
+        sb.append(",").append(checkedOutStatus);
+        sb.append(",").append(dueDate);
+        sb.append("\n");
+
         return sb.toString();
     }
 

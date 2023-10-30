@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
@@ -25,7 +24,6 @@ class LMSTest {
             System.err.println(e.getMessage());
         }
     }
-
 
     @Test
     @DisplayName("2")

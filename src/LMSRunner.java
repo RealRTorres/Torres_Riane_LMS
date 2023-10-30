@@ -1,23 +1,13 @@
 /*
 * Riane Torres
 * Co. No. 14835
-* 9/7/23
+* 10/29/23
 * CEN 3024C
 *  */
 /*Brief Function of LMSRunner class
 Provides user functions: show and choose options
 User's input the book details that'll be entered into the arraylist
 This main class is to let the user add, check-in, check-out, remove, and view booklist
-
-While everything is functional, there's one problem with the adding in
-When you add in a book, the status is set to null and the current date
-This is remedied as long as you check in the book after adding it the status and due dates are normal
-Needs to be fixed up by the next phase
-
-Another problem is if the bookfile.txt is deleted, then it's not possible to write a file
-Need to fix that
-
-Also, the menu needs rearranging with this weird order
 */
 
 import java.util.Scanner;

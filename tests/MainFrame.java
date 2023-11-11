@@ -28,6 +28,8 @@ public class MainFrame extends JFrame {
 
     //create new LMS object to connect to LMS class
     LMS lms = new LMS();
+    
+    //String url = "\C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Data\\lmsbooks\\book.ibd\";
 
     //TODO
     //  Everything is mainly printing out on JOptionPane

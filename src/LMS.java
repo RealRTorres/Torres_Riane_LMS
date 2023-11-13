@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+@Deprecated
 public class LMS {
 
     private ArrayList<Book> books = new ArrayList<>();

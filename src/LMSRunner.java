@@ -13,6 +13,7 @@ This main class is to let the user add, check-in, check-out, remove, and view bo
 import java.util.Scanner;
 import java.io.*;
 
+@Deprecated
 public class LMSRunner {
     public static void main(String[] args) throws IOException {
         //create a new LMS object

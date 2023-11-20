@@ -6,9 +6,8 @@
 /* Brief Function of BookDaoImpl class
  * Book Data Access Object Implementation (BookDaoImpl)
  * This is an implementation for the MySQL database.
- * In case if we ever need to swtich to another database,
- *  we don't need to change the MainFrame class.
- * It's a generic interface we can use.
+ * In case if we ever need to switch to another database, we don't need to change the MainFrame class.
+ *  It's a generic interface we can use.
  *  */
 
 package com.valencia.lms.dao;
@@ -16,18 +15,20 @@ package com.valencia.lms.dao;
 import com.valencia.lms.dto.BookDTO;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-//TODO Need to move some of the method stuff into the BookDao class.
-//     And clean up this code/class
 public class BookDaoImpl implements BookDao {
 
     /**
      * getConnection method
      * Establish connection and call upon the
-     *  connect() method in the BookDBConnection class
+     * connect() method in the BookDBConnection class
      * Arguments: BookDBConnection
      */
-    private Connection getConnection() {
+    public Connection getConnection() {
         Connection conn;
         try {
             conn = BookDBConnection.connect();
@@ -39,139 +40,225 @@ public class BookDaoImpl implements BookDao {
     }
 
     /**
-     * viewBookist method
-     * Use SELECT * query to display the whole booklist
-     *  currently in the LMS MySQL database
-     * Arguments: con
-     */
+     * updateData Method
+     * No method inside, but helps to override stuff
+     *  Also used for implementation from for updateData(String bookstatus, String barcodeOrTitle) in BookDao class
+     *  Don't delete or else it doesn't work
+     * Arguments: bookstatus, barcodeOrTitle*/
     @Override
-    public String viewBooklist() {
-        String lmsBookData = "";
-        String query = "SELECT * FROM book";
-        try {
-            Connection con = getConnection();
-            Statement statement = con.createStatement();
-            ResultSet result = statement.executeQuery(query);
+    public void updateData(String bookstatus, String barcodeOrTitle) {
 
-            while (result.next()) {
-                for (int j = 1; j <=1; j++) {
-                    lmsBookData += result.getString(j) + "\n";
-                    for (int i = 1; i <= 6; i++) {
-                        lmsBookData += result.getString(i) + ", ";
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return lmsBookData;
-    }
-
-    @Override
-    public void updateData(String bookstatus, String barCodeOrTitle) {
-
-    }
-
-    /**
-     * checkInBook method
-     * Uses UPDATE query to change checkedOutStatus to "Checked-In"
-     * Arguments: con
-     */
-    //TODO Fix up this query, don't think this'll work.
-    @Override
-    public void checkInBook(String bookstatus, String barCodeOrTitle) {
-        try {
-            Connection con = getConnection(); //DriverManager.getConnection(url, uname, password);
-            String query ="UPDATE book SET (checkedOutStatus = 'Checked-In' AND duedate = 'null') WHERE  checkedOutStatus = 'Checked-Out'";
-            PreparedStatement st = con.prepareStatement(query);
-
-            st.executeUpdate();
-            con.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
      * addBook method
      * Use INSERT query to add book into the LMS MySQL Database
-     * Arguments: con
+     * Arguments: BookDTO
      */
-
-    //FIXME Fix up the setString(), cause it ain't working.
     @Override
-    public void addBook(BookDTO bookdto ) {
+    public void addBook(BookDTO bookdto) {
         Connection con = null;
-        String query = "INSERT INTO book(barcode, title, author, genre) VALUES(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO book(barcode, title, author, genre, CheckedOutStatus) VALUES(?, ?, ?, ?, ?)";
         try {
-             con = getConnection();
+            con = getConnection();
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, bookdto.getBarcode());
             ps.setString(2, bookdto.getTitle());
             ps.setString(3, bookdto.getAuthor());
             ps.setString(4, bookdto.getGenre());
+            ps.setString(5, "Checked-In");
             ps.executeUpdate();
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * checkInBook method
+     * Uses UPDATE query to change checkedOutStatus to "Checked-In"
+     *  Having the LIKE statement is what makes it work with titles now
+     *  Something about have multiple words in a string will not make the method work without the LIKE
+     * Arguments: title
+     */
+    @Override
+    public BookDTO checkInBook(String title) {
+        BookDTO data;
+        Connection con;
+        try {
+            con = getConnection();
+            String query = "UPDATE book\n" +
+                    "SET CheckedOutStatus='Checked-In', DueDate = ? \n" +
+                    "WHERE Title LIKE ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setNull(1, Types.DATE);
+            ps.setString(2, title);
+
+            ps.executeUpdate();
+            data = getBookByTitle(title);
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return data;
     }
 
     /**
      * checkOutBook method
      * Uses UPDATE query to change checkedOutStatus to "Checked-Out"
-     * Arguments: con
+     * Arguments: title
      */
-    //TODO Fix up the query
     @Override
-    public void checkOutBook(BookDTO book) {
+    public BookDTO checkOutBook(String title) {
+        BookDTO data;
         Connection con;
         try {
-            con = getConnection(); ;
-            String query ="UPDATE book SET (checkedOutStatus = 'Checked-Out' AND duedate = 'null') WHERE  checkedOutStatus = 'Checked-In'";
-            PreparedStatement st = con.prepareStatement(query);
+            con = getConnection();
+            Date now = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(now);
+            calendar.add(Calendar.DATE, 28);
+            Date dd = calendar.getTime();
+            java.sql.Date dueDate = new java.sql.Date(dd.getTime());
+            String query = "UPDATE book\n" +
+                    "SET CheckedOutStatus='Checked-Out', DueDate = ?\n" +
+                    "WHERE Title LIKE ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setDate(1, dueDate);
+            ps.setString(2, title);
 
-            st.executeUpdate();
+            ps.executeUpdate();
+            data = getBookByTitle(title);
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return data;
+    }
+
+    /**
+     * getBookByTitleOrBarcode method
+     * Uses SELECT * to search through the database to find the book by barcode or title
+     *  Mainly useful for the removeBook() method
+     * Arguments: titleOrBarcode
+     */
+    @Override
+    public BookDTO getBookByTitleOrBarcode(String titleOrBarcode) {
+        BookDTO data = null;
+        String query = "SELECT * FROM book WHERE barcode =? or title LIKE ?";;
+        try {
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1,titleOrBarcode);
+            ps.setString(2,titleOrBarcode);
+            ps.executeQuery();
+            ResultSet rs = ps.executeQuery();;
+
+            while (rs.next()) {
+                data = new BookDTO();
+                data.setBarcode(rs.getString("barcode"));
+                data.setTitle(rs.getString("title"));
+                data.setGenre(rs.getString("genre"));
+                data.setAuthor(rs.getString("author"));
+                data.setCheckedOutStatus(rs.getString("checkedoutstatus"));
+                data.setDueDate(rs.getDate("duedate"));
+
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
     /**
      * removeBook method
-     * Uses the DELETE query to remove book from the LMS MySQL database
-     * Arguments: con
+     * First goes through the getBookByTitleOrBarcode() method to search through the database
+     *  for matching bacorde or title strings
+     *  Then uses the DELETE query to remove a book from the LMS MySQL database
+     * Arguments: titleOrBarcode
      */
-    //TODO So far, only works with only title or only barcode at a time.
-    //     It can remove books, but only if I code it with title in the code or barcode in the code.
-    //     Have it so user can enter title or barcode and the code take in title or barcode.
-    //     Something about the parameterIndexes is not making the code happy to take in title or barcode.
-    public String removeBook(String titleOrBarcode) {
-        String lmsBookData = "";
-        Connection con;
-        String query = "DELETE FROM book WHERE barcode=? OR title=?";
+    public Boolean removeBook(String titleOrBarcode) {
+        Boolean data = Boolean.FALSE;
+        Connection con = getConnection();
         try {
-            con = getConnection();
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, titleOrBarcode);
-            ps.setString(2, titleOrBarcode);
-            ps.executeUpdate();
+            BookDTO bookdto = getBookByTitleOrBarcode(titleOrBarcode);
+            if (bookdto != null) {
+                Statement stmt = con.createStatement();
+                String sql = "DELETE FROM BOOK " +
+                        "WHERE barcode = " + bookdto.getBarcode();
+                stmt.executeUpdate(sql);
+                data = Boolean.TRUE;
+            }
+         con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "Removing Successful" + lmsBookData;
+        return data;
+    }
+
+    /**
+     * viewBookist method
+     * Create an arraylist of the data in the database and display as strings
+     * Use SELECT * query to display the whole booklist currently in the LMS MySQL database
+     * Arguments: viewBooklist() implicit argument, the "()" part
+     */
+    @Override
+    public List<BookDTO>  viewBooklist() {
+        List<BookDTO> data = new ArrayList();
+        String query = "SELECT * FROM book";
+        try {
+            Connection con = getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+
+            while (rs.next()) {
+                BookDTO book = new BookDTO();
+                book.setBarcode(rs.getString("barcode"));
+                book.setTitle(rs.getString("title"));
+                book.setGenre(rs.getString("genre"));
+                book.setAuthor(rs.getString("author"));
+                book.setCheckedOutStatus(rs.getString("checkedoutstatus"));
+                book.setDueDate(rs.getDate("duedate"));
+                data.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
     /**
      * getBookByTitle method
-     * Extra method I thought I might need when trying to do the removeBook()
-     *  method. I might not need it.
-     * Arguments: N/A
+     * Need it for the checkInBook and checkOutBook methods
+     *  Helps with using SELECT * to search through title column in the database for the matching string input
+     *  Returns back the book data that'll be checked-in/out
+     * Arguments: title
      */
     @Override
     public BookDTO getBookByTitle(String title) {
-        //TODO
-        return null;
+        BookDTO data = null;
+        String query = "SELECT * FROM book WHERE  title like ?";;
+        try {
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1,title);
+            ps.executeQuery();
+            ResultSet rs = ps.executeQuery();;
+
+            while (rs.next()) {
+                data = new BookDTO();
+                data.setBarcode(rs.getString("barcode"));
+                data.setTitle(rs.getString("title"));
+                data.setGenre(rs.getString("genre"));
+                data.setAuthor(rs.getString("author"));
+                data.setCheckedOutStatus(rs.getString("checkedoutstatus"));
+                data.setDueDate(rs.getDate("duedate"));
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

@@ -5,30 +5,36 @@
  *  */
 /* Brief Function of BookDao class
  * Book Data Access Object (BookDao)
- * Class for all the SQL queries methods go here.
+ * Mainly used for the implementation for the BookDaoImpl class
+ * Provides the MySQL data from the MysSQL database
+ * Hides the implementation detail as a single interface
+ * Is the abstraction
  *  */
 
 package com.valencia.lms.dao;
 
 import com.valencia.lms.dto.BookDTO;
+
+import java.sql.Connection;
 import java.util.List;
 
-//TODO Fix this up, get the methods from BookDaoImpl class
-//     and put it here
 public interface BookDao {
 
-    public String viewBooklist();
+    public List<BookDTO> viewBooklist();
 
-    public void updateData(String bookstatus, String barCodeOrTitle);
+    public void updateData(String bookstatus, String barcodeOrTitle);
 
     public BookDTO getBookByTitle(String title);
 
-    //TODO Fix up this query, don't think this'll work.
-    void checkInBook(String bookstatus, String barCodeOrTitle);
+    public BookDTO checkInBook(String title);
 
-    public void addBook(BookDTO bookdto );
+    public Connection getConnection();
 
-    public void checkOutBook(BookDTO book);
+    public void addBook(BookDTO bookdto);
 
-    public String removeBook(String titleOrBarcode);
+    public BookDTO checkOutBook(String title) ;
+
+    public Boolean removeBook(String titleOrBarcode);
+
+    public BookDTO getBookByTitleOrBarcode(String titleOrBarcode);
 }

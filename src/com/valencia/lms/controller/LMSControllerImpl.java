@@ -6,8 +6,9 @@
 /* Brief Function of LMSControllerImpl class
  * LMSController Implementation class (LMSControllerImpl)
  * Is the generic interface for the LMSController class.
- * Similar use to the BookDaoImpl class, if we need to switch to another database,
- *  then we don't need to change the Mainframe class.
+ *  Similar use to the BookDaoImpl class
+ *  Main use is if we need to switch to another database then we don't need to change the Mainframe class
+ * Acts as the intermediary between the UI/Mainframe class and application logic/model
  *  */
 
 package com.valencia.lms.controller;
@@ -26,36 +27,51 @@ public class LMSControllerImpl implements LMSController {
 
     @Override
     public String viewBooklist() {
-        String data = dao.viewBooklist();
-        return data;
+        List<BookDTO> bookList = dao.viewBooklist();
+        StringBuilder sb = new StringBuilder();
+        for(BookDTO book : bookList) {
+            sb.append(book.toString());
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     @Override
     public BookDTO addBook(BookDTO newBook) {
-        return null;
+         dao.addBook(newBook);
+         return newBook;
     }
 
     @Override
-    public BookDTO checkOutBook( String titleOrBarcode) {
-        dao.updateData("checkout", titleOrBarcode);
-        return null;
-    }
-
-    @Override
-    public BookDTO checkBookStatus(String titleOrBarcode) {
-        BookDTO data = dao.getBookByTitle(titleOrBarcode);
+    public BookDTO checkOutBook(String title) {
+        BookDTO data = dao.checkOutBook(title);
         return data;
     }
 
+    /**
+     * checkBookStatus method
+     * While no method and returns null, still need it for the implementation at line 20
+     * Arguments: titleOrBarcode
+     * */
     @Override
-    public Object removeBook(String titleOrBarcode) {
-        //TODO
+    public BookDTO checkBookStatus(String titleOrBarcode) {
         return null;
+    }
+
+    @Override
+    public String removeBook(String titleOrBarcode) {
+        Boolean result = dao.removeBook(titleOrBarcode);
+        if (result) {
+            return titleOrBarcode + " was removed\n";
+        }
+        else {
+            return titleOrBarcode + " was NOT removed\n";
+        }
     }
 
     @Override
     public Object checkInBook(String title) {
-        //TODO
-        return null;
+        BookDTO data = dao.checkInBook(title);
+        return "Checked-In: " + data.toString() + "\n";
     }
 }

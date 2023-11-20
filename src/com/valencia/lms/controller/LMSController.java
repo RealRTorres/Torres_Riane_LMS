@@ -5,14 +5,14 @@
  *  */
 /* Brief Function of LMSController class
  * Makes it easier for the Mainframe to display the data.
- * Is responsible for receiving and modifying the data from the
- *  database (DAO layer).
+ * Is responsible for receiving and modifying the data from the database (DAO layer)
+ * Used for the implementation in the LMSControllerImpl class
+ * Decides how the data is displayed
  *  */
 
 package com.valencia.lms.controller;
 
 import com.valencia.lms.dto.BookDTO;
-import java.util.List;
 
 public interface LMSController {
     public String viewBooklist();
@@ -23,7 +23,7 @@ public interface LMSController {
 
     BookDTO checkBookStatus(String titleOrBarcode);
 
-    Object removeBook(String titleOrBarcode);
+    String removeBook(String titleOrBarcode);
 
     Object checkInBook(String title);
 }

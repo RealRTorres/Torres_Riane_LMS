@@ -9,13 +9,16 @@
  * This is now taking over the function of the Book Class from earlier
  * Create the details of the books as private strings
  * Create the book's objects (barcode, title, etc.)
- * The objects are then passwed between the Mainframe class, both controller classes, and DAO layer.
+ * The objects are then passed between the Mainframe class, both controller classes, and DAO layer.
+ * Used as a medium to transfer the core objects (book details data)
+ * Is the Model
  * */
 
 package com.valencia.lms.dto;
 import java.util.Date;
 
 public class BookDTO {
+    //Ask
     private static final long serialVersionUID = 417271472650760004L;
 
     private String barcode;
@@ -25,7 +28,6 @@ public class BookDTO {
     private String checkedOutStatus ="Checked-in";
     private Date dueDate;
 
-    //TODO Fix this.
     public BookDTO(String barcode, String title, String author, String genre,
                 String checkedOutStatus, Date bookDueDate) {
         this.barcode = barcode;
@@ -92,5 +94,16 @@ public class BookDTO {
     public Date setDueDate(Date dueDate) {
         this.dueDate = dueDate;
         return dueDate;
+    }
+
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("").append(barcode);
+        sb.append(", ").append(title);
+        sb.append(", ").append(author);
+        sb.append(", ").append(genre);
+        sb.append(", ").append(checkedOutStatus);
+        sb.append(", ").append(dueDate);
+        return sb.toString();
     }
 }

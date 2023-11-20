@@ -11,7 +11,7 @@
  * Created modified versions of the switch cases into their respective buttons here
  * Lets the user check-in, add, check-out, remove, view booklist, and exit
  * Taking over the function that LMSRunner was doing earlier
- * This is the "View"
+ * This is the View/User Interface
  * */
 
 import com.valencia.lms.controller.LMSController;
@@ -19,7 +19,6 @@ import com.valencia.lms.controller.LMSControllerImpl;
 import com.valencia.lms.dto.BookDTO;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -32,12 +31,7 @@ public class MainFrame extends JFrame {
     private JButton checkInBookbtn;
     private JButton btnAddBoook;
 
-    //create new LMS object to connect to LMS class
-
     LMSController controller = new LMSControllerImpl();
-    
-    //String url = "\C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Data\\lmsbooks\\book.ibd\";
-
     //TODO
     //  Everything is mainly printing out on JOptionPane
     //  Eventually we should print out on a Jtable
@@ -51,10 +45,6 @@ public class MainFrame extends JFrame {
 
         setVisible(true);
 
-        /*
-        * If the LMSTest class is running while you add a book
-        * It will not show up on the View Booklist and run into a problem
-        * Solution is to comment out all of LMSTest class */
         checkInBookbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -63,70 +53,89 @@ public class MainFrame extends JFrame {
                 //checks in book from the title the user entered
                 JOptionPane.showMessageDialog(null, controller.checkInBook(title));
 
+                JFrame jf = new JFrame("Checking In Book");
+                JTextArea myOutput = new JTextArea();
+                JPanel p = new JPanel();
+
+                myOutput.setText(String.valueOf(controller.checkInBook(title)) + controller.viewBooklist());
+
+                p.add(myOutput);
+                jf.add(myOutput);
+                jf.setSize(600,250);
+                jf.setVisible(true);
+
             }
         });
 
-        //TODO
-        //  Would be nice to eventually have a form with multiple text fields to input all the book details
-        btnAddBoook.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Creates a FileDialog object so the user can open the file
-                FileDialog fd = new FileDialog(new Frame(), "Open File", FileDialog.LOAD);
-                fd.show();
-                String file = fd.getFile();
-                //create a Book object in order to connect all the user added in details to the Book class
-
-                if (file != null && file.equals("bookfile.txt")) {
-                    String barcode = JOptionPane.showInputDialog(null, "Enter bar code: ");
-                    String title = JOptionPane.showInputDialog(null, "Enter title: ");
-                    String author = JOptionPane.showInputDialog(null, "Enter author: ");
-                    String genre = JOptionPane.showInputDialog(null, "Enter genre: ");
-                    BookDTO book = new BookDTO();
-                    //puts the user inputs into the object and setters
-                    book.setBarcode(barcode);
-                    book.setTitle(title);
-                    book.setAuthor(author);
-                    book.setGenre(genre);
-                    //adds user input book into the books array in LMS class
-                    JOptionPane.showMessageDialog(null, controller.addBook(book));
-                } else {
-                    JOptionPane.showMessageDialog(null, "File: " + file + " doesn't exist.", "File opener error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
         btnCheckOutBook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String titleOrBarcode = JOptionPane.showInputDialog(null, "Enter bar code or title: ", "Checking Out Book", JOptionPane.PLAIN_MESSAGE);
-                System.out.println(titleOrBarcode);
+                String title = JOptionPane.showInputDialog(null, "Enter title to check out: ", "Checking Out Book", JOptionPane.PLAIN_MESSAGE);
+                System.out.println(title);
                 //Checks out the book and changes status to "checked out" and gives a due date 28 days from checkout date
-                JOptionPane.showMessageDialog(null,"Checking out " + controller.checkOutBook(titleOrBarcode));
+                JOptionPane.showMessageDialog(null,"Checking out: " + controller.checkOutBook(title));
+
+                JFrame jf = new JFrame("Checking Out Book");
+                JTextArea myOutput = new JTextArea();
+                JPanel p = new JPanel();
+
+                myOutput.setText(String.valueOf( "Checked Out: " + controller.checkOutBook(title)) + controller.viewBooklist());
+
+                p.add(myOutput);
+                jf.add(myOutput);
+                jf.setSize(600,250);
+                jf.setVisible(true);
+            }
+        });
+
+        btnAddBoook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String barcode = JOptionPane.showInputDialog(null, "Enter bar code: ", "Adding Book", JOptionPane.PLAIN_MESSAGE);
+                String title = JOptionPane.showInputDialog(null, "Enter title: ", "Adding Book", JOptionPane.PLAIN_MESSAGE);
+                String author = JOptionPane.showInputDialog(null, "Enter author: ", "Adding Book", JOptionPane.PLAIN_MESSAGE);
+                String genre = JOptionPane.showInputDialog(null, "Enter genre: ", "Adding Book", JOptionPane.PLAIN_MESSAGE);
+
+                BookDTO book = new BookDTO();
+
+                book.setBarcode(barcode);
+                book.setTitle(title);
+                book.setAuthor(author);
+                book.setGenre(genre);
+
+                JFrame jf = new JFrame("Adding Book");
+                JTextArea myOutput = new JTextArea();
+                JPanel p = new JPanel();
+
+                myOutput.setText(String.valueOf("Added: " + controller.addBook(book)) +  controller.viewBooklist());
+
+                p.add(myOutput);
+                jf.add(myOutput);
+                jf.setSize(600, 250);
+                jf.setVisible(true);
 
             }
         });
+
         btnRemoveBook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JFrame jf = new JFrame("Removing Book from Booklist");
+                JTextArea myOutput = new JTextArea();
+                JPanel p = new JPanel();
+
                 String titleOrBarcode = JOptionPane.showInputDialog(null, "Enter bar code or title: ", "Removing Book", JOptionPane.PLAIN_MESSAGE);
                 System.out.println(titleOrBarcode);
 
-                JOptionPane.showMessageDialog(null, controller.removeBook(titleOrBarcode));
+                myOutput.setText(controller.removeBook(titleOrBarcode) + controller.viewBooklist());
 
-                /*try {
-                    //removes book from the array via user entered title or barcode
-                    JOptionPane.showMessageDialog(null, lms.removeBook(titleOrBarcode));
-                    //overwrites bookfile.txt without said removed book
-                    lms.saveBookListToFile(false);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }*/
+                p.add(myOutput);
+                jf.add(myOutput);
+                jf.setSize(600,450);
+                jf.setVisible(true);
             }
         });
 
-        /* If you're running and testing this, this won't work after you add in a book
-        * because the LMSTest class is running
-        * Solution is to comment out the whole LMSTest class */
         btnViewBooklist.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -135,12 +144,11 @@ public class MainFrame extends JFrame {
                 JTextArea myOutput = new JTextArea();
                 JPanel p = new JPanel();
 
-                myOutput.setText("Printing.... " + controller.viewBooklist());
-                //myOutput.setText("Printing.... " + lms.viewBooklistFromFile("bookfile.txt"));
+                myOutput.setText("Printing.... \n" + controller.viewBooklist());
 
                 p.add(myOutput);
                 jf.add(myOutput);
-                jf.setSize(600,300);
+                jf.setSize(600,450);
                 jf.setVisible(true);
             }
         });

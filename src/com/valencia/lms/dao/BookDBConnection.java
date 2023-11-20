@@ -4,8 +4,7 @@
  * CEN 3024C
  *  */
 /* Brief Function of BookDBConnection class
- * Separate class to access the database connection
- *  with the connect() method.
+ * Separate class to access the database connection with the connect() method.
  * Better to have a separate class for the method,
  *  so I don't have to keep opening the connection in the
  *  BookDaoImpl class.
@@ -22,7 +21,6 @@ import java.util.List;
 @Deprecated
 public class BookDBConnection {
 
-    //TODO Eventually hide all these in a config class
     private final String TABLE_NAME = "lmsbooks";
     final static String CHECKED_IN = "Checked-in";
     final static String CHECKED_OUT = "Checked-out";

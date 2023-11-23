@@ -133,7 +133,7 @@ public class MainFrame extends JFrame {
 
                 myOutput.setBackground(Color.BLACK);
                 myOutput.setForeground(Color.white);
-                myOutput.setText(String.valueOf("Added: " + controller.addBook(book)) + "\n" +  controller.viewBooklist());
+                myOutput.setText(String.valueOf("Added: " + controller.addBook(book)) + "\n\n" +  controller.viewBooklist());
 
                 p.add(myOutput);
                 jf.add(myOutput);

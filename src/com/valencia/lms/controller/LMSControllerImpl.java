@@ -13,9 +13,11 @@
 
 package com.valencia.lms.controller;
 
+import com.valencia.lms.LMSConstant;
 import com.valencia.lms.dao.BookDaoImpl;
 import com.valencia.lms.dto.BookDTO;
 
+import javax.swing.*;
 import java.util.List;
 
 public class LMSControllerImpl implements LMSController {
@@ -43,9 +45,16 @@ public class LMSControllerImpl implements LMSController {
     }
 
     @Override
-    public BookDTO checkOutBook(String title) {
-        BookDTO data = dao.checkOutBook(title);
-        return data;
+    public String checkOutBook(String title) {
+        BookDTO data =  dao.getBookByTitle(title);
+        if (data.getCheckedOutStatus().equalsIgnoreCase(LMSConstant.CHECKED_OUT)) {
+            JOptionPane.showMessageDialog(null,  data.getTitle() + " is not available", "Check Out Book Error", JOptionPane.ERROR_MESSAGE);
+            return "Already Checked-out: " + data.toString() + "\n\n";
+        }
+        else {
+            BookDTO value = dao.checkOutBook(title);
+            return "Checked-out: " + value.toString() + "\n\n";
+        }
     }
 
     /**
@@ -72,6 +81,6 @@ public class LMSControllerImpl implements LMSController {
     @Override
     public Object checkInBook(String title) {
         BookDTO data = dao.checkInBook(title);
-        return "Checked-In: " + data.toString() + "\n";
+        return "Checked-In: " + data.toString() + "\n\n";
     }
 }

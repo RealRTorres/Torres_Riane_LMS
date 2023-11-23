@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
 
                 p.add(myOutput);
                 jf.add(myOutput);
-                jf.setSize(600,250);
+                jf.setSize(600,400);
                 jf.setVisible(true);
 
             }
@@ -98,14 +98,16 @@ public class MainFrame extends JFrame {
                 String title = JOptionPane.showInputDialog(null, "Enter title to check out: ", "Checking Out Book", JOptionPane.PLAIN_MESSAGE);
                 System.out.println(title);
                 //Checks out the book and changes status to "checked out" and gives a due date 28 days from checkout date
+                String result = controller.checkOutBook(title);
+                JOptionPane.showMessageDialog(null, result);
 
                 myOutput.setBackground(Color.BLACK);
                 myOutput.setForeground(Color.white);
-                myOutput.setText(String.valueOf( "Checked Out: " + controller.checkOutBook(title)) + "\n" + controller.viewBooklist());
+                myOutput.setText(String.valueOf( result + controller.viewBooklist()));
 
                 p.add(myOutput);
                 jf.add(myOutput);
-                jf.setSize(600,250);
+                jf.setSize(600,400);
                 jf.setVisible(true);
             }
         });
@@ -135,7 +137,7 @@ public class MainFrame extends JFrame {
 
                 p.add(myOutput);
                 jf.add(myOutput);
-                jf.setSize(600, 250);
+                jf.setSize(600, 400);
                 jf.setVisible(true);
 
             }
@@ -157,7 +159,7 @@ public class MainFrame extends JFrame {
 
                 p.add(myOutput);
                 jf.add(myOutput);
-                jf.setSize(600,450);
+                jf.setSize(600,400);
                 jf.setVisible(true);
             }
         });
@@ -176,7 +178,7 @@ public class MainFrame extends JFrame {
 
                 jf.add(p.add(myOutput));
                 jf.add(myOutput);
-                jf.setSize(600,350);
+                jf.setSize(600,400);
                 jf.setVisible(true);
             }
         });

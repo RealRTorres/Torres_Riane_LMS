@@ -20,7 +20,7 @@ public interface LMSController {
 
     BookDTO addBook(BookDTO newBook);
 
-    BookDTO checkOutBook(String titleOrBarcode);
+    String checkOutBook(String titleOrBarcode);
 
     BookDTO checkBookStatus(String titleOrBarcode);
 

@@ -12,9 +12,10 @@
 
 package com.valencia.lms.dao;
 
+import com.valencia.lms.LMSConstant;
 import com.valencia.lms.dto.BookDTO;
 
-import javax.swing.*;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,11 +66,12 @@ public class BookDaoImpl implements BookDao {
         try {
             con = getConnection();
             String query = "UPDATE book\n" +
-                    "SET CheckedOutStatus='Checked-In', DueDate = ? \n" +
+                    "SET CheckedOutStatus=?, DueDate = ? \n" +
                     "WHERE Title LIKE ?";
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setNull(1, Types.DATE);
-            ps.setString(2, title);
+            ps.setString(1, LMSConstant.CHECKED_IN);
+            ps.setNull(2, Types.DATE);
+            ps.setString(3, title);
 
             ps.executeUpdate();
             data = getBookByTitle(title);
@@ -92,10 +94,6 @@ public class BookDaoImpl implements BookDao {
         Connection con;
         try {
             con = getConnection();
-            data = getBookByTitle(title);
-            if (data.getCheckedOutStatus().equalsIgnoreCase(data.getCheckedOutStatus())) {
-                JOptionPane.showMessageDialog(null,  data.getTitle() + " is not available", "Check Out Book Error", JOptionPane.ERROR_MESSAGE);
-            } else {
                 Date now = new Date();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(now);
@@ -103,16 +101,16 @@ public class BookDaoImpl implements BookDao {
                 Date dd = calendar.getTime();
                 java.sql.Date dueDate = new java.sql.Date(dd.getTime());
                 String query = "UPDATE book\n" +
-                        "SET CheckedOutStatus='Checked-Out', DueDate = ?\n" +
+                        "SET CheckedOutStatus=?, DueDate = ?\n" +
                         "WHERE Title LIKE ?";
                 PreparedStatement ps = con.prepareStatement(query);
-                ps.setDate(1, dueDate);
-                ps.setString(2, title);
+                ps.setString(1, LMSConstant.CHECKED_OUT);
+                ps.setDate(2, dueDate);
+                ps.setString(3, title);
 
                 ps.executeUpdate();
-
+                data = getBookByTitle(title); // get the updated book value
                 con.close();
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

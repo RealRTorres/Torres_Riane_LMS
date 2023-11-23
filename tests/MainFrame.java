@@ -19,6 +19,7 @@ import com.valencia.lms.controller.LMSControllerImpl;
 import com.valencia.lms.dto.BookDTO;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,35 +29,55 @@ public class MainFrame extends JFrame {
     private JButton btnCheckOutBook;
     private JButton btnViewBooklist;
     private JButton btnExit;
-    private JButton checkInBookbtn;
+    private JButton btnCheckInBook;
     private JButton btnAddBoook;
 
     LMSController controller = new LMSControllerImpl();
-    //TODO
-    //  Everything is mainly printing out on JOptionPane
-    //  Eventually we should print out on a Jtable
-    //  Still need to print "Checking In/Out", "Adding/Removing", "Printing", due date from 28 days etc. dialogue on JPanel or something
-    public MainFrame() {
+      public MainFrame() {
         //The main panel that holds all the buttons, generated from MainFrame.form
         setContentPane(mainPanel);
         setTitle("LMS Database");
-        setSize(450, 300);
+        setSize(450, 350);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        btnAddBoook.setBackground(Color.darkGray);
+        btnRemoveBook.setBackground(Color.darkGray);
+        btnViewBooklist.setBackground(Color.darkGray);
+        btnCheckOutBook.setBackground(Color.darkGray);
+        btnCheckInBook.setBackground(Color.darkGray);
+        btnExit.setBackground(Color.darkGray);
+
+        btnAddBoook.setForeground(Color.white);
+        btnRemoveBook.setForeground(Color.white);
+        btnViewBooklist.setForeground(Color.white);
+        btnCheckOutBook.setForeground(Color.white);
+        btnCheckInBook.setForeground(Color.white);
+        btnExit.setForeground(Color.white);
+
+          btnAddBoook.setFont(new Font("Helvetica", Font.PLAIN, 18));
+          btnRemoveBook.setFont(new Font("Helvetica", Font.PLAIN, 18));
+          btnViewBooklist.setFont(new Font("Helvetica", Font.PLAIN, 18));
+          btnCheckOutBook.setFont(new Font("Helvetica", Font.PLAIN, 18));
+          btnCheckInBook.setFont(new Font("Helvetica", Font.PLAIN, 18));
+          btnExit.setFont(new Font("Helvetica", Font.PLAIN, 18));
+
+          getContentPane().setBackground(Color.black);
         setVisible(true);
 
-        checkInBookbtn.addActionListener(new ActionListener() {
+        btnCheckInBook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JFrame jf = new JFrame("Checking In Book");
+                JPanel p = new JPanel();
+                JTextArea myOutput = new JTextArea();
+
                 String title = JOptionPane.showInputDialog(null, "Enter title: ", "Checking in book", JOptionPane.PLAIN_MESSAGE);
                 System.out.println(title);
                 //checks in book from the title the user entered
                 JOptionPane.showMessageDialog(null, controller.checkInBook(title));
 
-                JFrame jf = new JFrame("Checking In Book");
-                JTextArea myOutput = new JTextArea();
-                JPanel p = new JPanel();
-
+                myOutput.setBackground(Color.BLACK);
+                myOutput.setForeground(Color.white);
                 myOutput.setText(String.valueOf(controller.checkInBook(title)) + controller.viewBooklist());
 
                 p.add(myOutput);
@@ -70,16 +91,17 @@ public class MainFrame extends JFrame {
         btnCheckOutBook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String title = JOptionPane.showInputDialog(null, "Enter title to check out: ", "Checking Out Book", JOptionPane.PLAIN_MESSAGE);
-                System.out.println(title);
-                //Checks out the book and changes status to "checked out" and gives a due date 28 days from checkout date
-                JOptionPane.showMessageDialog(null,"Checking out: " + controller.checkOutBook(title));
-
                 JFrame jf = new JFrame("Checking Out Book");
                 JTextArea myOutput = new JTextArea();
                 JPanel p = new JPanel();
 
-                myOutput.setText(String.valueOf( "Checked Out: " + controller.checkOutBook(title)) + controller.viewBooklist());
+                String title = JOptionPane.showInputDialog(null, "Enter title to check out: ", "Checking Out Book", JOptionPane.PLAIN_MESSAGE);
+                System.out.println(title);
+                //Checks out the book and changes status to "checked out" and gives a due date 28 days from checkout date
+
+                myOutput.setBackground(Color.BLACK);
+                myOutput.setForeground(Color.white);
+                myOutput.setText(String.valueOf( "Checked Out: " + controller.checkOutBook(title)) + "\n" + controller.viewBooklist());
 
                 p.add(myOutput);
                 jf.add(myOutput);
@@ -107,7 +129,9 @@ public class MainFrame extends JFrame {
                 JTextArea myOutput = new JTextArea();
                 JPanel p = new JPanel();
 
-                myOutput.setText(String.valueOf("Added: " + controller.addBook(book)) +  controller.viewBooklist());
+                myOutput.setBackground(Color.BLACK);
+                myOutput.setForeground(Color.white);
+                myOutput.setText(String.valueOf("Added: " + controller.addBook(book)) + "\n" +  controller.viewBooklist());
 
                 p.add(myOutput);
                 jf.add(myOutput);
@@ -127,6 +151,8 @@ public class MainFrame extends JFrame {
                 String titleOrBarcode = JOptionPane.showInputDialog(null, "Enter bar code or title: ", "Removing Book", JOptionPane.PLAIN_MESSAGE);
                 System.out.println(titleOrBarcode);
 
+                myOutput.setBackground(Color.BLACK);
+                myOutput.setForeground(Color.white);
                 myOutput.setText(controller.removeBook(titleOrBarcode) + controller.viewBooklist());
 
                 p.add(myOutput);
@@ -144,11 +170,13 @@ public class MainFrame extends JFrame {
                 JTextArea myOutput = new JTextArea();
                 JPanel p = new JPanel();
 
+                myOutput.setBackground(Color.BLACK);
+                myOutput.setForeground(Color.white);
                 myOutput.setText("Printing.... \n" + controller.viewBooklist());
 
-                p.add(myOutput);
+                jf.add(p.add(myOutput));
                 jf.add(myOutput);
-                jf.setSize(600,450);
+                jf.setSize(600,350);
                 jf.setVisible(true);
             }
         });

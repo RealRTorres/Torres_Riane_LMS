@@ -8,6 +8,7 @@
  * Is responsible for receiving and modifying the data from the database (DAO layer)
  * Used for the implementation in the LMSControllerImpl class
  * Decides how the data is displayed
+ * Is the Controller
  *  */
 
 package com.valencia.lms.controller;

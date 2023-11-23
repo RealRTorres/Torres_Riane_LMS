@@ -9,6 +9,7 @@
  * Provides the MySQL data from the MysSQL database
  * Hides the implementation detail as a single interface
  * Is the abstraction
+ * Acts between the Controllers and Model
  *  */
 
 package com.valencia.lms.dao;

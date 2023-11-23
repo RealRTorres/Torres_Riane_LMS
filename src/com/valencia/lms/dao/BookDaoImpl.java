@@ -14,6 +14,7 @@ package com.valencia.lms.dao;
 
 import com.valencia.lms.dto.BookDTO;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,34 +52,10 @@ public class BookDaoImpl implements BookDao {
     }
 
     /**
-     * addBook method
-     * Use INSERT query to add book into the LMS MySQL Database
-     * Arguments: BookDTO
-     */
-    @Override
-    public void addBook(BookDTO bookdto) {
-        Connection con = null;
-        String query = "INSERT INTO book(barcode, title, author, genre, CheckedOutStatus) VALUES(?, ?, ?, ?, ?)";
-        try {
-            con = getConnection();
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, bookdto.getBarcode());
-            ps.setString(2, bookdto.getTitle());
-            ps.setString(3, bookdto.getAuthor());
-            ps.setString(4, bookdto.getGenre());
-            ps.setString(5, "Checked-In");
-            ps.executeUpdate();
-            con.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * checkInBook method
      * Uses UPDATE query to change checkedOutStatus to "Checked-In"
      *  Having the LIKE statement is what makes it work with titles now
-     *  Something about have multiple words in a string will not make the method work without the LIKE
+     *   Something about have multiple words in a string will not make the method work without the LIKE
      * Arguments: title
      */
     @Override
@@ -106,6 +83,7 @@ public class BookDaoImpl implements BookDao {
     /**
      * checkOutBook method
      * Uses UPDATE query to change checkedOutStatus to "Checked-Out"
+     * Decided to create a Calendar object to calculate date instead of DATEADD() because that syntax isn't working for me
      * Arguments: title
      */
     @Override
@@ -114,22 +92,27 @@ public class BookDaoImpl implements BookDao {
         Connection con;
         try {
             con = getConnection();
-            Date now = new Date();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(now);
-            calendar.add(Calendar.DATE, 28);
-            Date dd = calendar.getTime();
-            java.sql.Date dueDate = new java.sql.Date(dd.getTime());
-            String query = "UPDATE book\n" +
-                    "SET CheckedOutStatus='Checked-Out', DueDate = ?\n" +
-                    "WHERE Title LIKE ?";
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setDate(1, dueDate);
-            ps.setString(2, title);
-
-            ps.executeUpdate();
             data = getBookByTitle(title);
-            con.close();
+            if (data.getCheckedOutStatus().equalsIgnoreCase(data.getCheckedOutStatus())) {
+                JOptionPane.showMessageDialog(null,  data.getTitle() + " is not available", "Check Out Book Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Date now = new Date();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(now);
+                calendar.add(Calendar.DATE, 28);
+                Date dd = calendar.getTime();
+                java.sql.Date dueDate = new java.sql.Date(dd.getTime());
+                String query = "UPDATE book\n" +
+                        "SET CheckedOutStatus='Checked-Out', DueDate = ?\n" +
+                        "WHERE Title LIKE ?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setDate(1, dueDate);
+                ps.setString(2, title);
+
+                ps.executeUpdate();
+
+                con.close();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -172,9 +155,34 @@ public class BookDaoImpl implements BookDao {
     }
 
     /**
+     * addBook method
+     * Use INSERT query to add book into the LMS MySQL Database
+     * Arguments: BookDTO
+     */
+    @Override
+    public void addBook(BookDTO bookdto) {
+        Connection con = null;
+        String query = "INSERT INTO book(barcode, title, author, genre, CheckedOutStatus) VALUES(?, ?, ?, ?, ?)";
+        try {
+            con = getConnection();
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, bookdto.getBarcode());
+            ps.setString(2, bookdto.getTitle());
+            ps.setString(3, bookdto.getAuthor());
+            ps.setString(4, bookdto.getGenre());
+            ps.setString(5, "Checked-In");
+            ps.executeUpdate();
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * removeBook method
      * First goes through the getBookByTitleOrBarcode() method to search through the database
-     *  for matching bacorde or title strings
+     *  for matching barcode or title strings
+     *  Uses a boolean data to indicate a book was deleted
      *  Then uses the DELETE query to remove a book from the LMS MySQL database
      * Arguments: titleOrBarcode
      */
@@ -200,7 +208,7 @@ public class BookDaoImpl implements BookDao {
     /**
      * viewBookist method
      * Create an arraylist of the data in the database and display as strings
-     * Use SELECT * query to display the whole booklist currently in the LMS MySQL database
+     *  Use SELECT * query to display the whole booklist currently in the LMS MySQL database
      * Arguments: viewBooklist() implicit argument, the "()" part
      */
     @Override

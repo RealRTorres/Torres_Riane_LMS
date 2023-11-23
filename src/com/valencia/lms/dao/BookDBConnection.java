@@ -6,8 +6,7 @@
 /* Brief Function of BookDBConnection class
  * Separate class to access the database connection with the connect() method.
  * Better to have a separate class for the method,
- *  so I don't have to keep opening the connection in the
- *  BookDaoImpl class.
+ *  so I don't have to keep opening the connection in the BookDaoImpl class.
  *  */
 
 package com.valencia.lms.dao;

@@ -1,15 +1,15 @@
-/* Riane Torres
+/** Riane Torres
  * Co. No. 14835
- * 11/12/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of BookDao class
- * Book Data Access Object (BookDao)
- * Mainly used for the implementation for the BookDaoImpl class
- * Provides the MySQL data from the MysSQL database
- * Hides the implementation detail as a single interface
- * Is the abstraction
- * Acts between the Controllers and Model
+ *
+ * Brief Function of BookDao class
+ * Book Data Access Object (BookDao).
+ * Mainly used for the implementation for the BookDaoImpl class.
+ * Provides the MySQL data from the MysSQL database.
+ * Hides the implementation detail as a single interface.
+ * Is the abstraction.
+ * Acts between the Controllers and Model.
  *  */
 
 package com.valencia.lms.dao;

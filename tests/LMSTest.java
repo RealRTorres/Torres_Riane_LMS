@@ -1,5 +1,14 @@
-import org.junit.jupiter.api.*;
+/**
+ * Riane Torres
+ * Co. No. 14835
+ * 11/27/23
+ * CEN 3024C
+ *
+ * Brief Function of LMSTest class
+ * Uses series of programs to input strings into the LMSRunner class to see if that class works.
+ */
 
+import org.junit.jupiter.api.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;

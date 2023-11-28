@@ -1,17 +1,17 @@
-/*
+/**
  * Riane Torres
  * Co. No. 14835
- * 11/2/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of BookDTO class
+ *
+ * Brief Function of BookDTO class
  * Book Data Transfer Object (BookDTO)
- * This is now taking over the function of the Book Class from earlier
- * Create the details of the books as private strings
- * Create the book's objects (barcode, title, etc.)
+ * Now taking over the function of the Book Class from earlier.
+ * Create the details of the books as private strings.
+ * Create the book's objects (barcode, title, etc.).
  * The objects are then passed between the Mainframe class, both controller classes, and DAO layer.
- * Used as a medium to transfer the core objects (book details data)
- * Is the Model
+ * Used as a medium to transfer the core objects (book details data).
+ * Is the Model.
  * */
 
 package com.valencia.lms.dto;

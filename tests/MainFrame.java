@@ -1,14 +1,10 @@
-/*
+/**
  * Riane Torres
  * Co. No. 14835
- * 11/2/23
+ * 11/27/23
  * CEN 3024C
- */
-/* Brief function of the MainFrame class
- * Provides the GUI portion of the LMSRunner class
- * Has buttons on the menu instead of taking numbers for the switch case
- * Menu is created from the MainFrame.form by using the GUI builder
- * Created modified versions of the switch cases into their respective buttons here
+ *
+ * Brief function of the MainFrame class
  * Lets the user check-in, add, check-out, remove, view booklist, and exit
  * Taking over the function that LMSRunner was doing earlier
  * This is the View/User Interface
@@ -34,7 +30,6 @@ public class MainFrame extends JFrame {
 
     LMSController controller = new LMSControllerImpl();
       public MainFrame() {
-        //The main panel that holds all the buttons, generated from MainFrame.form
         setContentPane(mainPanel);
         setTitle("LMS Database");
         setSize(450, 350);
@@ -73,7 +68,7 @@ public class MainFrame extends JFrame {
 
                 String title = JOptionPane.showInputDialog(null, "Enter title: ", "Checking in book", JOptionPane.PLAIN_MESSAGE);
                 System.out.println(title);
-                //checks in book from the title the user entered
+
                 JOptionPane.showMessageDialog(null, controller.checkInBook(title));
 
                 myOutput.setBackground(Color.BLACK);
@@ -97,7 +92,7 @@ public class MainFrame extends JFrame {
 
                 String title = JOptionPane.showInputDialog(null, "Enter title to check out: ", "Checking Out Book", JOptionPane.PLAIN_MESSAGE);
                 System.out.println(title);
-                //Checks out the book and changes status to "checked out" and gives a due date 28 days from checkout date
+
                 String result = controller.checkOutBook(title);
                 JOptionPane.showMessageDialog(null, result);
 
@@ -167,7 +162,6 @@ public class MainFrame extends JFrame {
         btnViewBooklist.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //checks current books on the booklist
                 JFrame jf = new JFrame("Viewing Booklist");
                 JTextArea myOutput = new JTextArea();
                 JPanel p = new JPanel();
@@ -184,7 +178,6 @@ public class MainFrame extends JFrame {
         });
         btnExit.addActionListener(new ActionListener() {
             @Override
-            //Exit button
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
@@ -192,7 +185,6 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        //main for MainFrame.java to run the menu and GUI buttons
        new MainFrame();
     }
 }

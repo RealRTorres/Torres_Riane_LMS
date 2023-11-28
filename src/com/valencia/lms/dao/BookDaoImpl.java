@@ -1,13 +1,14 @@
-/* Riane Torres
+/**
+ * Riane Torres
  * Co. No. 14835
- * 11/12/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of BookDaoImpl class
+ *
+ * Brief Function of BookDaoImpl class
  * Book Data Access Object Implementation (BookDaoImpl)
  * This is an implementation for the MySQL database.
  * In case if we ever need to switch to another database, we don't need to change the MainFrame class.
- *  It's a generic interface we can use.
+ * It's a generic interface we can use.
  *  */
 
 package com.valencia.lms.dao;
@@ -27,8 +28,9 @@ public class BookDaoImpl implements BookDao {
     /**
      * getConnection method
      * Establish connection and call upon the
-     * connect() method in the BookDBConnection class
+     * connect() method in the BookDBConnection class.
      * Arguments: BookDBConnection
+     * @return conn Connection to SQLite Database.
      */
     public Connection getConnection() {
         Connection conn;
@@ -43,10 +45,13 @@ public class BookDaoImpl implements BookDao {
 
     /**
      * updateData Method
-     * No method inside, but helps to override stuff
-     *  Also used for implementation from for updateData(String bookstatus, String barcodeOrTitle) in BookDao class
-     *  Don't delete or else it doesn't work
-     * Arguments: bookstatus, barcodeOrTitle*/
+     * No method inside, but helps to override stuff.
+     * Also used for implementation from for updateData(String bookstatus, String barcodeOrTitle) in BookDao class
+     * Don't delete or else it doesn't work.
+     * Arguments: bookstatus, barcodeOrTitle
+     * @param bookstatus Implements string.
+     * @param barcodeOrTitle Implements string.
+     * */
     @Override
     public void updateData(String bookstatus, String barcodeOrTitle) {
 
@@ -54,10 +59,12 @@ public class BookDaoImpl implements BookDao {
 
     /**
      * checkInBook method
-     * Uses UPDATE query to change checkedOutStatus to "Checked-In"
-     *  Having the LIKE statement is what makes it work with titles now
-     *   Something about have multiple words in a string will not make the method work without the LIKE
+     * Uses UPDATE query to change checkedOutStatus to "Checked-In".
+     * Having the LIKE statement is what makes it work with titles now.
+     * Having multiple words in a string will not make the method work without the LIKE.
      * Arguments: title
+     * @param title String containing the book's title.
+     * @return data Updates book's checkout status and Due date.
      */
     @Override
     public BookDTO checkInBook(String title) {
@@ -84,9 +91,11 @@ public class BookDaoImpl implements BookDao {
 
     /**
      * checkOutBook method
-     * Uses UPDATE query to change checkedOutStatus to "Checked-Out"
-     * Decided to create a Calendar object to calculate date instead of DATEADD() because that syntax isn't working for me
+     * Uses UPDATE query to change checkedOutStatus to "Checked-Out".
+     * Decided to create a Calendar object to calculate date instead of DATEADD() because that syntax isn't working for me.
      * Arguments: title
+     * @param title String containing the book's title.
+     * @return data Updates the book's checkout status and due date associated with the respective title.
      */
     @Override
     public BookDTO checkOutBook(String title) {
@@ -119,9 +128,11 @@ public class BookDaoImpl implements BookDao {
 
     /**
      * getBookByTitleOrBarcode method
-     * Uses SELECT * to search through the database to find the book by barcode or title
-     *  Mainly useful for the removeBook() method
+     * Uses SELECT * to search through the database to find the book by barcode or title.
+     * Mainly useful for the removeBook() method.
      * Arguments: titleOrBarcode
+     * @param titleOrBarcode String containing the book's barcode or title
+     * @return data The book's details that associated with the respective barcode or title.
      */
     @Override
     public BookDTO getBookByTitleOrBarcode(String titleOrBarcode) {
@@ -154,8 +165,9 @@ public class BookDaoImpl implements BookDao {
 
     /**
      * addBook method
-     * Use INSERT query to add book into the LMS MySQL Database
+     * Use INSERT query to add book into the LMS MySQL Database.
      * Arguments: BookDTO
+     * @param bookdto Object of the book.
      */
     @Override
     public void addBook(BookDTO bookdto) {
@@ -179,10 +191,12 @@ public class BookDaoImpl implements BookDao {
     /**
      * removeBook method
      * First goes through the getBookByTitleOrBarcode() method to search through the database
-     *  for matching barcode or title strings
-     *  Uses a boolean data to indicate a book was deleted
-     *  Then uses the DELETE query to remove a book from the LMS MySQL database
+     * for matching barcode or title strings.
+     * Uses a boolean data to indicate a book was deleted.
+     * Then uses the DELETE query to remove a book from the LMS MySQL database.
      * Arguments: titleOrBarcode
+     * @param titleOrBarcode String containing the book's barcode or title.
+     * @return data The book's details that associated with the respective barcode or title to be removed.
      */
     public Boolean removeBook(String titleOrBarcode) {
         Boolean data = Boolean.FALSE;
@@ -205,9 +219,10 @@ public class BookDaoImpl implements BookDao {
 
     /**
      * viewBookist method
-     * Create an arraylist of the data in the database and display as strings
-     *  Use SELECT * query to display the whole booklist currently in the LMS MySQL database
-     * Arguments: viewBooklist() implicit argument, the "()" part
+     * Create an arraylist of the data in the database and display as strings.
+     * Use SELECT * query to display the whole booklist currently in the LMS MySQL database.
+     * Arguments: viewBooklist() implicit argument, the "()" part.
+     * @return data The book's details.
      */
     @Override
     public List<BookDTO>  viewBooklist() {
@@ -236,10 +251,12 @@ public class BookDaoImpl implements BookDao {
 
     /**
      * getBookByTitle method
-     * Need it for the checkInBook and checkOutBook methods
-     *  Helps with using SELECT * to search through title column in the database for the matching string input
-     *  Returns back the book data that'll be checked-in/out
+     * Need it for the checkInBook and checkOutBook methods.
+     * Helps with using SELECT * to search through title column in the database for the matching string input.
+     * Returns back the book data that'll be checked-in/out.
      * Arguments: title
+     * @param title String containing title.
+     * @return data The book's details associated with the title input.
      */
     @Override
     public BookDTO getBookByTitle(String title) {

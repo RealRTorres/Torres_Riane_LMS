@@ -1,14 +1,15 @@
-/* Riane Torres
+/**
+ *  Riane Torres
  * Co. No. 14835
- * 11/12/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of LMSController class
+ *
+ * Brief Function of LMSController class
  * Makes it easier for the Mainframe to display the data.
- * Is responsible for receiving and modifying the data from the database (DAO layer)
- * Used for the implementation in the LMSControllerImpl class
- * Decides how the data is displayed
- * Is the Controller
+ * Is responsible for receiving and modifying the data from the database (DAO layer).
+ * Used for the implementation in the LMSControllerImpl class.
+ * Decides how the data is displayed.
+ * Is the Controller.
  *  */
 
 package com.valencia.lms.controller;

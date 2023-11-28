@@ -1,17 +1,19 @@
+/**
+ * Riane Torres
+ * Co. No. 14835
+ * 11/27/23
+ * CEN 3024C
+ *
+ * Brief Function of Book class
+ * Provides Helps organize my code as a place to store all the information for the books.
+ * Formats the strings and dates.
+ * And converts dates into strings.
+ */
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/*
- * Riane Torres
- * Co. No. 14835
- * 10/29/23
- * CEN 3024C
- *  */
-/* Brief Function of Book class
-* Provides Helps organize my code as a place to store all the information for the books
-* Along with formatting the strings, converting dates into strings, and formatting the dates
-*/
 public class Book {
     private String barcode;
     private String title;

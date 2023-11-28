@@ -1,14 +1,15 @@
-/* Riane Torres
+/**
+ *  Riane Torres
  * Co. No. 14835
- * 11/12/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of LMSControllerImpl class
+ *
+ * Brief Function of LMSControllerImpl class
  * LMSController Implementation class (LMSControllerImpl)
  * Is the generic interface for the LMSController class.
- *  Similar use to the BookDaoImpl class
- *  Main use is if we need to switch to another database then we don't need to change the Mainframe class
- * Acts as the intermediary between the UI/Mainframe class and application logic/model
+ * Similar use to the BookDaoImpl class.
+ * Main use is if we need to switch to another database then we don't need to change the Mainframe class.
+ * Acts as the intermediary between the UI/Mainframe class and application logic/model.
  *  */
 
 package com.valencia.lms.controller;
@@ -57,11 +58,6 @@ public class LMSControllerImpl implements LMSController {
         }
     }
 
-    /**
-     * checkBookStatus method
-     * While no method and returns null, still need it for the implementation at line 20
-     * Arguments: titleOrBarcode
-     * */
     @Override
     public BookDTO checkBookStatus(String titleOrBarcode) {
         return null;

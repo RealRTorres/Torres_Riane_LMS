@@ -1,16 +1,14 @@
-/*
+/**
  * Riane Torres
  * Co. No. 14835
- * 10/14/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of LMS class
- * This is where the getters and setters for the objects and methods will go
- * Private the variables in the parameters so no one changes it
- * Public the objects
- * This is where the methods for the menu options are
  *
- * Probably best to rearrange the methods, if it doesn't mess up the program, again
+ * Brief Function of LMS class
+ * This is where the methods for the menu options are.
+ * Where the getters and setters for the objects and methods will go.
+ * Have private variables in the parameters so no one changes it.
+ * Have public objects.
  * */
 
 import javax.swing.*;
@@ -39,12 +37,12 @@ public class LMS {
 
      /**
      * readFromFile method
-     * purpose is to read every line of text that is in bookfile.txt every time LMS program is used
-     * Uses a stringtokenizer to pass the integer and strings
-     * Uses a try and catch for the IOException and e
+     * Its purpose is to read every line of text that is in bookfile.txt every time LMS program is used.
+     * Uses a stringtokenizer to pass the integer and strings.
+     * Uses a try and catch for the IOException and e.
      * @param filepath
      * arguments: stringDate, book
-     * Returns either an error message if the file can't be read or create book objects
+     * Returns either an error message if the file can't be read or create book objects.
      */
     public void readFromFile(String filepath)  {
        String currentLine = null;
@@ -86,13 +84,12 @@ public class LMS {
 
     /**
      * addBookInfo method
-     * adds user's input of ID no./now barcode, title, author, and genre into the idList and arraylist
-     * calls the toCSV in the Book class to print out the user's input
-     * also invokes the saveBookToFile method to write the text into bookfile.txt
+     * Adds user's input of ID no./now barcode, title, author, and genre into the idList and arraylist.
+     * Calls the toCSV in the Book class to print out the user's input.
+     * Also invokes the saveBookToFile method to write the text into bookfile.txt.
      * Arguments: newBook
-     *
-     * @param newBook returns whatever the user inputted by adding it in the arraylist
-     * @return
+     * @param newBook returns the user's input by adding it in the arraylist.
+     * @return newBook Object containing the book string array to add to the arraylist.
      */
     public Object addBook(Book newBook) {
         this.books.add(newBook);
@@ -104,10 +101,10 @@ public class LMS {
 
     /**
      * saveBooktoFile method
-     * Saves the book to the file and append to the last line
-     * @param book
+     * Saves the book to the file and append to the last line.
+     * @param book Book object containing the arrays of strings.
      * Arguments: n/a
-     * Returns user's input text into the file
+     * Returns user's input text into the file.
      */
     private void saveBookToFile(Book book)  {
         try {
@@ -119,14 +116,14 @@ public class LMS {
         }
     }
 
-      /**
+    /**
      * saveToFile method
-     * overwrites the bookfile.txt whenever adding/removing a book
-     * It saves the book list as comma seperated values
-     * uses the getters to get the book details
+     * Overwrites the bookfile.txt whenever adding/removing a book.
+     * It saves the book list as comma seperated values.
+     * Uses the getters to get the book details.
      * Arguments: n/a
-     * @param append
-     * Returns the overwritten text file
+     * @param append Boolean value containing the string to the PrintWriter.
+     * Returns the overwritten text file.
      */
     public void saveBookListToFile(boolean append)  {
         PrintWriter pWriter = null;
@@ -143,12 +140,12 @@ public class LMS {
 
     /**
      * checkInBookStatus method
-     * Checks in a book from the user via book title
+     * Checks in a book from the user via book title.
      * Arguments:CHECKED_IN
-     * @param titleOrBarcode
-     * Returns bookCheckedOutStatus as "checked-out",
-     *  save and overwrites the file to update the status,
-     *  print out confirmation and current booklist
+     * @param titleOrBarcode String containing the book's barcode or title
+     * @return result Returns bookCheckedOutStatus as "checked-out".
+     * Saves and overwrites the file to update the status.
+     * Prints out confirmation and current booklist.
      */
 
     public Book checkInBookStatus(String titleOrBarcode) {
@@ -173,11 +170,11 @@ public class LMS {
 
     /**
      * checkOutBook method
-     * Changes book status to check out via user's input title or barcode
-     * Also calculates the due date
+     * Changes book status to check out via user's input title or barcode.
+     * Also calculates the due date.
      * Arguments: titleOrBarcode, CHECKED_OUT, Calendar.DATE, 28
-     * @param titleOrBarcode
-     * returns the claculated due date and updated status
+     * @param titleOrBarcode Contains the string of the book's barcode or title.
+     * @return result Returns the claculated due date and updated status.
      */
     public Book checkOutBook(String titleOrBarcode){
         Book result = null;
@@ -209,11 +206,10 @@ public class LMS {
 
     /**
      * removeBookInfo method
-     * Removes barcode, title, author, genre from the arraylist
+     * Removes barcode, title, author, genre from the arraylist.
      * Arguments: titleOrBarcode
-     *
-     * @param titleOrBarcode
-     * @return Returns by deleting the user's input from the arrays
+     * @param titleOrBarcode String containing the book's barcode or title.
+     * @return result Returns the deletion of one the arrays from the user's input.
      * @throws IOException
      */
     public Book removeBook(String titleOrBarcode) throws IOException {
@@ -236,7 +232,7 @@ public class LMS {
     /**
      * printBookList method
      * Print the current values of the booklist (barcode, title, author, genre, status, and due date)
-        * that's currently in the memory
+     * that's currently in the memory.
      * Arguments: n/a
      * Returns the values printed out via CSV format
      */
@@ -248,19 +244,16 @@ public class LMS {
 
     /**
      * viewBooklistFromFile method
-     * Prints out current booklist in the text written in bookfile.txt
+     * Prints out current booklist in the text written in bookfile.txt.
      * arguments: filepath
-     *
-     * @param filepath returns the values/book details via CSV format
-     * @return
+     * @param filepath String containing filepath.
+     * @return books.toString() Returns the values/book details via CSV format.
      */
     public String viewBooklistFromFile(String filepath) {
         System.out.println("Printing..." );
         this.books = new ArrayList<>();
         this.readFromFile(filepath);
         for(Book book : this.books) {
-            //Using JOptionPane results in a new pane for every single book, not what we want
-            //JOptionPane.showMessageDialog(null, book.toCSV());
 
             System.out.println(book.toCSV());
         }

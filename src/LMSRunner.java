@@ -1,13 +1,13 @@
-/*
+/**
 * Riane Torres
 * Co. No. 14835
-* 10/29/23
+* 11/27/23
 * CEN 3024C
-*  */
-/*Brief Function of LMSRunner class
-Provides user functions: show and choose options
-User's input the book details that'll be entered into the arraylist
-This main class is to let the user add, check-in, check-out, remove, and view booklist
+*
+* Brief Function of LMSRunner class
+* Provides show and choose options for the user.
+* User's input the book details that'll be entered into the arraylist.
+* This main class is to let the user add, check-in, check-out, remove, and view booklist.
 */
 
 import java.util.Scanner;
@@ -56,7 +56,6 @@ public class LMSRunner {
                     System.out.println("Enter file name: ");
                     String fileName = input.nextLine();
 
-                    //create a file object for the user to open
                     File file = new File(fileName);
 
                     if (!file.exists()) {
@@ -73,12 +72,11 @@ public class LMSRunner {
                         System.out.println("Add genre");
                         genre = input.nextLine();
 
-                        //put the user input into the object and setters
                         book.setBarcode(barcode);
                         book.setTitle(title);
                         book.setAuthor(author);
                         book.setGenre(genre);
-                        //add user input book into the books array in LMS class
+
                         lms.addBook(book);
                     }
 
@@ -89,7 +87,7 @@ public class LMSRunner {
                     input.nextLine();
                     System.out.println("Enter bar code or title: ");
                     titleOrBarcode = input.nextLine();
-                    //Checks out the book and changes status to "checked-out"
+
                     lms.checkOutBook(titleOrBarcode);
                 }
 
@@ -99,18 +97,14 @@ public class LMSRunner {
                     input.skip("\n");
                     titleOrBarcode = input.nextLine();
 
-                    //remove book from the array
                     lms.removeBook(titleOrBarcode);
-                    //overwrite bookfile.txt that without the removed book
                     lms.saveBookListToFile(false);
                 }
                 case 5 -> {
-                    //Checks current books on the booklist
                     lms.viewBooklistFromFile("bookfile.txt");
                     System.out.println("Viewing current booklist:");
                 }
                 case 6 -> {
-                    //Exit program option
                     System.out.println("Exiting....");
                     break;
                 }

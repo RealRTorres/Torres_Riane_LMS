@@ -1,9 +1,10 @@
-/* Riane Torres
+/**
+ *  Riane Torres
  * Co. No. 14835
- * 11/12/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of BookDBConnection class
+ *
+ * Brief Function of BookDBConnection class
  * Separate class to access the database connection with the connect() method.
  * Better to have a separate class for the method,
  *  so I don't have to keep opening the connection in the BookDaoImpl class.

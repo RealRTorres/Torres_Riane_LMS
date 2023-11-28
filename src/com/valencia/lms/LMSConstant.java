@@ -1,10 +1,11 @@
-/* Riane Torres
+/**
+ *  Riane Torres
  * Co. No. 14835
- * 11/22/23
+ * 11/27/23
  * CEN 3024C
- *  */
-/* Brief Function of LMSConstant class
- * My constant strings to use for the checked-out statuses in my checkInBook() and checkOutBook() methods in
+ *
+ * Brief Function of LMSConstant class
+ * Constant strings to use for the checked-out statuses in my checkInBook() and checkOutBook() methods in
  *  both of the impl classes
  *  */
 
